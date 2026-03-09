@@ -770,6 +770,10 @@ def download_resume(resume_id, format):
 @app.route('/faq')
 def faq():
     return render_template('faq.html')
+# Создаем базу данных при запуске
+with app.app_context():
+    init_db()
+    print("✅ База данных создана/проверена")
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)
