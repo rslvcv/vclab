@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCLab - Создание резюме</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- НАВИГАЦИЯ -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/" class="logo-text">VC<span class="logo-dot">•</span>Lab</a>
+            </div>
+            <div class="nav-links">
+                <a href="/">Главная</a>
+                <a href="/create" style="color: white; font-weight: 700;">Создать резюме</a>
+                <a href="/pricing">Тарифы</a>
+                <a href="/dashboard">Личный кабинет</a>
+                <a href="/login" class="btn-primary">Войти</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ЗАГОЛОВОК -->
+    <div class="form-header" style="margin-top: 40px;">
+        <h2>Создание резюме</h2>
+        <p>Заполните форму и получите готовое резюме на почту</p>
+    </div>
+
+    <!-- ФОРМА -->
+    <div class="form-container">
+        <form class="resume-form" method="POST" action="/create-resume">
+            <!-- Личная информация -->
+            <div class="form-section">
+                <h3><i class="fas fa-user"></i> Личная информация</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="required">ФИО</label>
+                        <input type="text" name="fullname" placeholder="Иванов Иван Иванович" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="required">Желаемая должность</label>
+                        <input type="text" name="position" placeholder="Python Developer" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="required">Email</label>
+                        <input type="email" name="email" placeholder="ivan@example.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Телефон</label>
+                        <input type="tel" name="phone" placeholder="+7 (999) 999-99-99">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Город</label>
+                        <input type="text" name="city" placeholder="Москва">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- О себе -->
+            <div class="form-section">
+                <h3><i class="fas fa-user-circle"></i> О себе</h3>
+                <div class="form-group">
+                    <textarea name="about" rows="4" placeholder="Расскажите о себе, ваших целях и достижениях..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Опыт работы -->
+            <div class="form-section">
+                <h3><i class="fas fa-briefcase"></i> Опыт работы</h3>
+                
+                <div class="form-group">
+                    <label>Компания</label>
+                    <input type="text" name="company1" placeholder="Название компании">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Должность</label>
+                        <input type="text" name="position1" placeholder="Senior Developer">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Период работы</label>
+                        <input type="text" name="period1" placeholder="2020 - 2023">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                     <label>Обязанности</label>
+                    <textarea name="description1" rows="3" placeholder="Описание ваших обязанностей и достижений..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Образование и навыки -->
+            <div class="form-section">
+                <h3><i class="fas fa-graduation-cap"></i> Образование и навыки</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ВУЗ</label>
+                        <input type="text" name="university" placeholder="МГУ им. Ломоносова">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Год окончания</label>
+                        <input type="text" name="graduation_year" placeholder="2020">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Специальность</label>
+                    <input type="text" name="specialty" placeholder="Прикладная математика и информатика">
+                </div>
+                
+                <div class="form-group">
+                    <label>Навыки</label>
+                    <input type="text" name="skills" placeholder="Python, SQL, Django, Flask">
+                    <small style="color: #666; margin-top: 5px; display: block;">Введите навыки через запятую</small>
+                </div>
+            </div>
+
+            <!-- Информация об оплате -->
+            <div style="background: linear-gradient(135deg, #2563eb10, #7c3aed10); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+                    <div style="flex: 1;">
+                        <h4 style="color: #2563eb; margin-bottom: 5px;">💰 Стоимость: 100 ₽</h4>
+                        <p style="color: #666; margin: 0;">Вы получите резюме в PDF и Word на указанную почту</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <span style="background: white; padding: 8px 15px; border-radius: 50px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                            <i class="fab fa-cc-mastercard" style="color: #2563eb;"></i> Карта
+                        </span>
+                        <span style="background: white; padding: 8px 15px; border-radius: 50px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                            <i class="fas fa-mobile-alt" style="color: #2563eb;"></i> СБП
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- БЛОК УСИЛЕНИЙ -->
+<div class="form-section" style="background: linear-gradient(135deg, #2563eb05, #7c3aed05);">
+    <h3><i class="fas fa-rocket"></i> Усильте резюме (выберите нужное)</h3>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;">
+        
+        <!-- Фото в резюме -->
+        <label style="display: flex; align-items: center; gap: 10px; padding: 15px; background: white; border-radius: 10px; border: 2px solid #eaeaea; cursor: pointer; transition: all 0.3s;">
+            <input type="checkbox" name="enhance_photo" value="99" style="width: 20px; height: 20px;">
+            <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-camera" style="color: #2563eb;"></i>
+                    <strong>Фото в резюме</strong>
+                    <span style="background: #2563eb; color: white; padding: 2px 8px; border-radius: 50px; font-size: 12px;">+99₽</span>
+                </div>
+                <small style="color: #666;">Добавьте фото — доверие выше на 40%</small>
+            </div>
+        </label>
+
+        <!-- ATS-оптимизация -->
+        <label style="display: flex; align-items: center; gap: 10px; padding: 15px; background: white; border-radius: 10px; border: 2px solid #eaeaea; cursor: pointer;">
+            <input type="checkbox" name="enhance_ats" value="149" style="width: 20px; height: 20px;">
+            <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-robot" style="color: #2563eb;"></i>
+                    <strong>ATS-оптимизация</strong>
+                    <span style="background: #2563eb; color: white; padding: 2px 8px; border-radius: 50px; font-size: 12px;">+149₽</span>
+                </div>
+                <small style="color: #666;">Роботы пропустят ваше резюме</small>
+            </div>
+        </label>
+
+        <!-- Сопроводительное письмо -->
+        <label style="display: flex; align-items: center; gap: 10px; padding: 15px; background: white; border-radius: 10px; border: 2px solid #eaeaea; cursor: pointer;">
+            <input type="checkbox" name="enhance_cover" value="149" style="width: 20px; height: 20px;">
+            <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-pen-fancy" style="color: #2563eb;"></i>
+                    <strong>Сопроводительное письмо</strong>
+                    <span style="background: #2563eb; color: white; padding: 2px 8px; border-radius: 50px; font-size: 12px;">+149₽</span>
+                </div>
+                <small style="color: #666;">Готовое письмо под вакансию</small>
+            </div>
+        </label>
+
+        <!-- Проверка орфографии -->
+        <label style="display: flex; align-items: center; gap: 10px; padding: 15px; background: white; border-radius: 10px; border: 2px solid #eaeaea; cursor: pointer;">
+            <input type="checkbox" name="enhance_spell" value="99" style="width: 20px; height: 20px;">
+            <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-spell-check" style="color: #2563eb;"></i>
+                    <strong>Проверка орфографии</strong>
+                    <span style="background: #2563eb; color: white; padding: 2px 8px; border-radius: 50px; font-size: 12px;">+99₽</span>
+                </div>
+                <small style="color: #666;">Ни одной ошибки в тексте</small>
+            </div>
+        </label>
+
+        <!-- Помощь в написании -->
+        <label style="display: flex; align-items: center; gap: 10px; padding: 15px; background: white; border-radius: 10px; border: 2px solid #eaeaea; cursor: pointer;">
+            <input type="checkbox" name="enhance_help" value="199" style="width: 20px; height: 20px;">
+            <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-lightbulb" style="color: #2563eb;"></i>
+                    <strong>Помощь в написании</strong>
+                    <span style="background: #2563eb; color: white; padding: 2px 8px; border-radius: 50px; font-size: 12px;">+199₽</span>
+                </div>
+                <small style="color: #666;">Готовые шаблоны, если не знаете что писать</small>
+            </div>
+        </label>
+    </div>
+
+    <!-- ИТОГОВАЯ СТОИМОСТЬ (будет обновляться через JavaScript) -->
+    <div style="margin-top: 20px; padding: 15px; background: #2563eb10; border-radius: 10px; text-align: right;">
+        <span style="font-size: 18px;">Итого: <strong id="total-price">99</strong> ₽</span>
+    </div>
+</div>
+
+<!-- JavaScript для подсчета суммы -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('input[type=checkbox][name^="enhance_"]');
+    const totalSpan = document.getElementById('total-price');
+    
+    function updateTotal() {
+        let total = 99; // Базовая стоимость
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                total += parseInt(cb.value);
+            }
+        });
+        totalSpan.textContent = total;
+    }
+    
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', updateTotal);
+    });
+});
+</script>
+            
+            <!-- Кнопка отправки -->
+           <button type="submit" class="btn-submit">
+    <i class="fas fa-pen"></i>
+    Создать резюме
+</button>
+        </form>
+    </div>
+
+    <!-- ПОДВАЛ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>VCLab</h4>
+                <p>Создайте резюме, которое выделит вас среди других кандидатов.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-vk"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Сервис</h4>
+                <a href="/">Главная</a>
+
+                <a href="/create">Создать резюме</a>
+
+                <a href="/pricing">Тарифы</a>
+
+                <a href="/dashboard">Личный кабинет</a>
+            </div>
+            <div class="footer-section">
+                <h4>Поддержка</h4>
+                <p><i class="fas fa-envelope"></i> support@vclab.ru</p>
+                <p><i class="fas fa-phone"></i> +7 (999) 123-45-67</p>
+            </div>
+        </div>
+        <div class="foote
+
+
+r-bottom">
+            <p>© 2024 VCLab. Все права защищены.</p>
+        </div>
+    </footer>
+</body>
+</html>

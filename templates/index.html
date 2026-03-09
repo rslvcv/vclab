@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCLab - Создание резюме онлайн</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- НАВИГАЦИЯ -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/" class="logo-text">VC<span class="logo-dot">•</span>Lab</a>
+            </div>
+            <div class="nav-links">
+                <a href="/">Главная</a>
+                <a href="/create">Создать резюме</a>
+                <a href="/pricing">Тарифы</a>
+                <a href="/dashboard">Личный кабинет</a>
+                <a href="/faq">FAQ</a>
+                {% if session.user_id %}
+                    <a href="/logout" class="btn-primary">Выйти</a>
+                {% else %}
+                    <a href="/login" class="btn-primary">Войти</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- ГЛАВНЫЙ ЭКРАН (HERO) -->
+    <section class="hero">
+        <div class="hero-content fade-in">
+            <h1>
+                Создайте резюме, 
+
+                которое <span>выделит вас</span>
+            </h1>
+            <p>
+                VCLab - это профессиональный конструктор резюме. 
+                Заполните форму один раз и получите готовое резюме 
+                в PDF и Word на вашу почту мгновенно!
+            </p>
+            <div class="hero-buttons">
+                <a href="/create" class="btn-hero btn-hero-primary">
+                    <i class="fas fa-pen"></i>
+                    Создать резюме
+                </a>
+                <a href="/pricing" class="btn-hero btn-hero-secondary">
+                    <i class="fas fa-tag"></i>
+                    Тарифы
+                </a>
+            </div>
+        </div>
+    </section>
+<!-- ПРЕИМУЩЕСТВА -->
+    <section class="features">
+        <h2 class="section-title">
+            Почему выбирают <span>VCLab</span>
+        </h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>Мгновенно</h3>
+                <p>
+                    Резюме создается за секунды. 
+                    Никакого ожидания - заполнили и получили на почту.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <h3>2 формата</h3>
+                <p>
+                    PDF для отправки работодателям и Word 
+                    для самостоятельного редактирования.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-magic"></i>
+                </div>
+                <h3>Профессиональный дизайн</h3>
+                <p>
+                    Современные шаблоны, которые нравятся 
+                    рекрутерам и HR-специалистам.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3>Безопасно</h3>
+                <p>
+                    Ваши данные надежно защищены. 
+                    Мы не передаем информацию третьим лицам.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-infinity"></i>
+                </div>
+                <h3>Без ограничений</h3>
+                <p>
+                    Можете создавать сколько угодно резюме, 
+                    редактировать и улучшать их.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>Поддержка 24/7</h3>
+                <p>
+                    Если что-то пошло не так - мы всегда рядом 
+                    и поможем решить любую проблему.
+                </p>
+            </div>
+        </div>
+    </section>
+<!-- КРАТКИЕ ТАРИФЫ (НА ГЛАВНОЙ) -->
+    <section class="pricing" style="padding: 40px 20px;">
+        <h2 class="section-title">
+            Выберите <span>тариф</span>
+        </h2>
+        <div class="pricing-cards" style="grid-template-columns: repeat(3, 1fr); max-width: 1000px; margin: 0 auto;">
+            
+            <!-- Базовый тариф -->
+            <div class="pricing-card" style="padding: 30px 20px;">
+                <h3 style="font-size: 24px; margin-bottom: 10px;">Базовый</h3>
+                <div class="price" style="font-size: 36px;">99 ₽</div>
+                <p style="color: #666; margin: 5px 0 15px;">за 1 резюме</p>
+                <ul class="pricing-features" style="font-size: 14px; margin: 15px 0;">
+                    <li><i class="fas fa-check"></i> PDF + Word</li>
+                    <li><i class="fas fa-check"></i> Современный дизайн</li>
+                    <li><i class="fas fa-check"></i> Отправка на почту</li>
+                </ul>
+                <a href="/create" class="btn-pricing" style="padding: 10px;">Выбрать</a>
+            </div>
+
+            <!-- Уверенный тариф -->
+            <div class="pricing-card popular" style="padding: 30px 20px; transform: scale(1.05);">
+                <div class="popular-badge" style="font-size: 12px;">🔥 Хит</div>
+                <h3 style="font-size: 24px; margin-bottom: 10px;">Уверенный</h3>
+                <div class="price" style="font-size: 36px;">299 ₽</div>
+                <p style="color: #666; margin: 5px 0 15px;">за 1 резюме</p>
+                <ul class="pricing-features" style="font-size: 14px; margin: 15px 0;">
+                    <li><i class="fas fa-check"></i> Всё из Базового</li>
+                    <li><i class="fas fa-check"></i> ATS-оптимизация</li>
+                    <li><i class="fas fa-check"></i> Сопроводительное письмо</li>
+                </ul>
+                <a href="/create" class="btn-pricing" style="padding: 10px;">Выбрать</a>
+            </div>
+
+            <!-- VIP тариф -->
+            <div class="pricing-card" style="padding: 30px 20px;">
+                <h3 style="font-size: 24px; margin-bottom: 10px;">VIP</h3>
+                <div class="price" style="font-size: 36px;">999 ₽</div>
+                <p style="color: #666; margin: 5px 0 15px;">пакет 5 резюме</p>
+                <ul class="pricing-features" style="font-size: 14px; margin: 15px 0;">
+                    <li><i class="fas fa-check"></i> 5 резюме</li>
+                    <li><i class="fas fa-check"></i> Все усиления</li>
+                    <li><i class="fas fa-check"></i> VIP поддержка</li>
+                </ul>
+                <a href="/create" class="btn-pricing" style="padding: 10px;">Выбрать</a>
+            </div>
+        </div>
+        
+        <!-- Ссылка на все тарифы -->
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="/pricing" style="color: #2563eb; text-decoration: none; font-weight: 500;">
+                <i class="fas fa-arrow-right"></i> Подробнее о тарифах и усилениях
+            </a>
+        </div>
+    </section>
+<!-- ГАРАНТИЯ -->
+    <div style="text-align: center; margin: 40px auto; max-width: 600px; padding: 0 20px;">
+        <div style="background: linear-gradient(135deg, #2563eb10, #7c3aed10); border-radius: 50px; padding: 15px 25px; display: inline-block;">
+            <i class="fas fa-shield-alt" style="color: #10b981; margin-right: 10px;"></i>
+            <span style="color: #2563eb; font-weight: 500;">Гарантия результата:</span>
+            <span style="color: #1a1a1a;"> если за 14 дней не пригласят на собеседование — сделаем новое резюме бесплатно</span>
+        </div>
+    </div>
+
+    <!-- ПРИЗЫВ К ДЕЙСТВИЮ -->
+    <div style="text-align: center; margin: 60px auto; max-width: 600px; padding: 0 20px;">
+        <h2 style="font-size: 32px; color: #1a1a1a; margin-bottom: 20px;">Готовы выделиться?</h2>
+        <p style="color: #666; margin-bottom: 30px;">Создайте резюме, которое заметят. Это займет всего 5 минут.</p>
+        <a href="/create" style="display: inline-block; padding: 15px 50px; font-size: 18px; text-decoration: none; background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; border-radius: 50px; font-weight: 600; transition: all 0.3s;">
+            <i class="fas fa-pen"></i> Создать резюме сейчас
+        </a>
+    </div>
+<!-- ПОДВАЛ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>VCLab</h4>
+                <p>Создайте резюме, которое выделит вас среди других кандидатов. Быстро, просто, профессионально.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-vk"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Сервис</h4>
+                <a href="/">Главная</a>
+
+                <a href="/create">Создать резюме</a>
+
+                <a href="/pricing">Тарифы</a>
+
+                <a href="/dashboard">Личный кабинет</a>
+
+                <a href="/faq">FAQ</a>
+            </div>
+            <div class="footer-section">
+                <h4>Поддержка</h4>
+                <p><i class="fas fa-envelope"></i> support@vclab.ru</p>
+                <p><i class="fas fa-phone"></i> +7 (999) 123-45-67</p>
+                <p><i class="fas fa-clock"></i> 24/7</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 VCLab. Все права защищены.</p>
+        </div>
+    </footer>
+</body>
+</html>    

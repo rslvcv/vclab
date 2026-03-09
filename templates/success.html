@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCLab - Резюме создано!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- НАВИГАЦИЯ -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/" class="logo-text">VC<span class="logo-dot">•</span>Lab</a>
+            </div>
+            <div class="nav-links">
+                <a href="/">Главная</a>
+                <a href="/create">Создать резюме</a>
+                <a href="/pricing">Тарифы</a>
+                <a href="/dashboard">Личный кабинет</a>
+                <a href="/login" class="btn-primary">Войти</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- СТРАНИЦА УСПЕХА -->
+    <div class="success-page">
+        <div class="success-card fade-in">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2>Резюме успешно создано!</h2>
+            <p>Мы отправили ваше резюме на указанную почту.</p>
+            <p style="color: #2563eb; font-weight: 500;">Проверьте папку "Входящие" или "Спам"</p>
+            
+            <div style="background: #f8fafc; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: left;">
+                <p style="margin: 5px 0;"><i class="fas fa-check-circle" style="color: #10b981;"></i> PDF файл - для печати и отправки</p>
+                <p style="margin: 5px 0;"><i class="fas fa-check-circle" style="color: #10b981;"></i> Word файл - для редактирования</p>
+                <p style="margin: 5px 0;"><i class="fas fa-check-circle" style="color: #10b981;"></i> Сохранено в вашем личном кабинете</p>
+            </div>
+
+            <div class="success-actions">
+                <a href="/create" class="btn-success btn-success-primary">
+                    <i class="fas fa-plus"></i>
+                    Создать еще
+                </a>
+                <a href="/dashboard" class="btn-success btn-success-secondary">
+                    <i class="fas fa-folder"></i>
+                    Мои резюме
+                </a>
+            </div>
+
+            <p style="margin-top: 30px; color: #999; font-size: 14px;">
+                Письмо не пришло? 
+                <a href="#" style="color: #2563eb; text-decoration: none;">Отправить снова</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- ПОДВАЛ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>VCLab</h4>
+                <p>Создайте резюме, которое выделит вас среди других кандидатов.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-vk"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Сервис</h4>
+                <a href="/">Главная</a>
+
+                <a href="/create">Создать резюме</a>
+
+                <a href="/pricing">Тарифы</a>
+
+                <a href="/dashboard">Личный кабинет</a>
+            </div>
+            <div class="footer-section">
+                <h4>Поддержка</h4>
+                <p><i class="fas fa-envelope"></i> support@vclab.ru</p>
+                <p><i class="fas fa-phone"></i> +7 (999) 123-45-67</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 VCLab. Все права защищены.</p>
+        </div>
+    </footer>
+</body>
+</html>

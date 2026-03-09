@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCLab - Часто задаваемые вопросы</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .faq-header {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .faq-header h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        .faq-header p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .faq-container {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        .faq-item {
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid #eaeaea;
+            transition: all 0.3s;
+        }
+        .faq-item:hover {
+            box-shadow: 0 10px 30px rgba(37,99,235,0.1);
+        }
+        .faq-question {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+        }
+        .faq-question h3 {
+            font-size: 18px;
+            color: #1a1a1a;
+            flex: 1;
+        }
+        .faq-question i {
+            color: #2563eb;
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+        .faq-answer {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eaeaea;
+            color: #666;
+            line-height: 1.6;
+            display: none;
+        }
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        .contact-support {
+            text-align: center;
+            margin: 60px auto;
+            padding: 40px;
+            background: linear-gradient(135deg, #2563eb10, #7c3aed10);
+            border-radius: 20px;
+            max-width: 600px;
+        }
+        .contact-support h2 {
+            font-size: 28px;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+        .contact-support p {
+            color: #666;
+            margin-bottom: 25px;
+        }
+        .support-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .support-btn {
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .support-btn-primary {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+        }
+        .support-btn-secondary {
+            background: white;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+        }
+        .support-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37,99,235,0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- НАВИГАЦИЯ -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/" class="logo-text">VC<span class="logo-dot">•</span>Lab</a>
+            </div>
+            <div class="nav-links">
+                <a href="/">Главная</a>
+                <a href="/create">Создать резюме</a>
+                <a href="/pricing">Тарифы</a>
+                <a href="/dashboard">Личный кабинет</a>
+                <a href="/faq" style="color: white; font-weight: 700;">FAQ</a>
+                {% if session.user_id %}
+                    <a href="/logout" class="btn-primary">Выйти</a>
+                {% else %}
+                    <a href="/login" class="btn-primary">Войти</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- ЗАГОЛОВОК FAQ -->
+    <div class="faq-header">
+        <h1>❓ Часто задаваемые вопросы</h1>
+        <p>Ответы на самые популярные вопросы о создании резюме и работе сервиса</p>
+    </div>
+
+    <!-- СПИСОК ВОПРОСОВ -->
+    <div class="faq-container">
+        <!-- Вопрос 1 -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <i class="fas fa-chevron-down"></i>
+                <h3>Как работает ATS-оптимизация?</h3>
+            </div>
+            <div class="faq-answer">
+                <p>ATS (Applicant Tracking System) — это программы, которые сканируют резюме в поисках ключевых слов. Мы добавляем в ваше резюме скрытые ключевые слова под вашу профессию, правильно форматируем даты и названия компаний. В результате роботы гарантированно пропускают резюме к живому рекрутеру. Вы этого не увидите, но эффект будет!</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 2 -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <i class="fas fa-chevron-down"></i>
+                <h3>Что входит в помощь по написанию?</h3>
+            </div>
+            <div class="faq-answer">
+                <p>Если вы не знаете, что писать о себе или в опыте работы — мы предлагаем готовые шаблоны под вашу профессию. Для программистов, менеджеров, дизайнеров, продажников и других специальностей. Вы сможете отредактировать текст или оставить как есть. Также даем подсказки, какие качества указать и как описать достижения.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 3 -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <i class="fas fa-chevron-down"></i>
+                <h3>Как я получу готовое резюме?</h3>
+            </div>
+            <div class="faq-answer">
+                <p>Сразу после оплаты мы отправляем готовые файлы на вашу почту:
+                
+📄 PDF — для отправки работодателям
+                
+📝 Word — для самостоятельного редактирования
+                
+Также резюме сохраняется в вашем личном кабинете, и вы можете скачать его в любой момент.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 4 -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <i class="fas fa-chevron-down"></i>
+                <h3>Что значит гарантия 14 дней?</h3>
+            </div>
+            <div class="faq-answer">
+                <p>Мы настолько уверены в качестве наших резюме, что даем гарантию: если в течение 14 дней после получения резюме вас не пригласили ни на одно собеседование — мы бесплатно сделаем новое резюме с другими настройками или вернем деньги. Это работает!</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 5 -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <i class="fas fa-chevron-down"></i>
+                <h3>Можно добавить усилие к любому тарифу?</h3>
+            </div>
+            <div class="faq-answer">
+                <p>Да! Вы можете выбрать любой тариф (Базовый, Уверенный, VIP) и добавить к нему любое количество усилений:
+                
+📸 Фото в резюме (+99₽)
+                
+🤖 ATS-оптимизация (+149₽)
+                
+✍️ Сопроводительное письмо (+149₽)
+                
+🔍 Проверка орфографии (+99₽)
+                
+🎯 Помощь в написании (+199₽)
+                
+Итоговая цена будет рассчитана автоматически.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 6 -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <i class="fas fa-chevron-down"></i>
+                <h3>Как удалить резюме из личного кабинета?</h3>
+            </div>
+            <div class="faq-answer">
+                <p>В личном кабинете рядом с каждым резюме есть красная кнопка с корзиной 🗑️. Нажмите на неё и подтвердите удале
+
+
+ние. Резюме будет удалено безвозвратно. Будьте внимательны!</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 7 -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <i class="fas fa-chevron-down"></i>
+                <h3>Какие форматы файлов я получу?</h3>
+            </div>
+            <div class="faq-answer">
+                <p>Всегда два формата:
+                
+📄 PDF — для отправки работодателям (открывается на любом устройстве)
+                
+📝 Word — для редактирования (можете изменить под себя)
+                
+Если выбрали сопроводительное письмо — оно придет отдельным PDF.</p>
+            </div>
+        </div>
+
+        <!-- Вопрос 8 -->
+        <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question">
+                <i class="fas fa-chevron-down"></i>
+                <h3>Есть ли скидки за несколько резюме?</h3>
+            </div>
+            <div class="faq-answer">
+                <p>Да! Тариф VIP дает 5 резюме за 999₽ — это экономия 1000₽ по сравнению с покупкой по отдельности. Также в тариф Уверенный уже включены все усиления со скидкой 300₽.</p>
+            </div>
+        </div>
+    </div>
+
+   <!-- КОНТАКТЫ ПОДДЕРЖКИ -->
+    <div class="contact-support">
+        <h2>Остались вопросы?</h2>
+        <p>Напишите нам на почту — ответим в течение 5 минут</p>
+        <div style="margin-top: 20px;">
+            <a href="mailto:support@vclab.ru" style="display: inline-flex; align-items: center; gap: 10px; padding: 15px 40px; background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; text-decoration: none; border-radius: 50px; font-size: 18px; transition: all 0.3s;">
+                <i class="fas fa-envelope"></i>
+                support@vclab.ru
+            </a>
+        </div>
+        <p style="margin-top: 15px; color: #666; font-size: 14px;">
+            <i class="fas fa-clock"></i> Обычно отвечаем в течение 5-10 минут
+        </p>
+    </div>
+
+    <!-- ПОДВАЛ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>VCLab</h4>
+                <p>Создайте резюме, которое выделит вас среди других кандидатов.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-vk"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Сервис</h4>
+                <a href="/">Главная</a>
+
+                <a href="/create">Создать резюме</a>
+
+                <a href="/pricing">Тарифы</a>
+
+                <a href="/dashboard">Личный кабинет</a>
+
+                <a href="/faq">FAQ</a>
+            </div>
+            <div class="footer-section">
+                <h4>Поддержка</h4>
+                <p><i class="fas fa-envelope"></i> support@vclab.ru</p>
+                <p><i class="fas fa-phone"></i> +7 (999) 123-45-67</p>
+                <p><i class="fas fa-clock"></i> 24/7</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 VCLab. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+    function toggleFaq(element) {
+        element.classList.toggle('active');
+    }
+    </script>
+</body>
+</html>

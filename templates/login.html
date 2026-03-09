@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCLab - Вход</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .auth-container {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        .auth-card {
+            background: white;
+            max-width: 450px;
+            width: 100%;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .auth-header h2 {
+            font-size: 32px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        .auth-header p {
+            color: #666;
+        }
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: #f0f2f5;
+            padding: 5px;
+            border-radius: 50px;
+        }
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .auth-tab.active {
+            background: white;
+            color: #2563eb;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .auth-form {
+            display: none;
+        }
+        .auth-form.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #eaeaea;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+        .btn-auth {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37,99,235,0.3);
+        }
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+        .auth-footer a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+        .flash-message {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .flash-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .flash-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .flash-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+    <!-- НАВИГАЦИЯ -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/" class="logo-text">VC<span class="logo-dot">•</span>Lab</a>
+            </div>
+            <div class="nav-links">
+                <a href="/">Главная</a>
+                <a href="/create">Создать резюме</a>
+                <a href="/pricing">Тарифы</a>
+                <a href="/dashboard">Личный кабинет</a>
+                <a href="/login" class="btn-primary" style="color: white;">Войти</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ФОРМА ВХОДА/РЕГИСТРАЦИИ -->
+    <div class="auth-container">
+        <div class="auth-card fade-in">
+            <div class="auth-header">
+                <h2>Добро пожаловать!</h2>
+                <p>Войдите или создайте аккаунт</p>
+            </div>
+
+            <!-- Flash сообщения -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <!-- Табы -->
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="switchTab('login')">Вход</div>
+                <div class="auth-tab" onclick="switchTab('register')">Регистрация</div>
+            </div>
+
+            <!-- Форма входа -->
+            <form class="auth-form active" id="login-form" method="POST" action="/login">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-auth">
+                    <i class="fas fa-sign-in-alt"></i> Войти
+                </button>
+            </form>
+
+            <!-- Форма регистрации -->
+            <form class="auth-form" id="register-form" method="POST" action="/register">
+                <div class="form-group">
+                    <label>Имя пользователя</label>
+                    <input type="text" name="username" placeholder="ivan_ivanov" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                    <label>Подтвердите пароль</label>
+                    <input type="password" name="confirm_password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-auth">
+                    <i class="fas fa-user-plus"></i> Зарегистрироваться
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <a href="#">Забыли пароль?</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            // Переключаем табы
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            
+            if (tab === 'login') {
+                document.querySelector('.auth-tab').classList.add('active');
+                document.getElementById('login-form').classList.add('active');
+            } else {
+                document.querySelectorAll('.auth-tab')[1].classList.add('active');
+                document.getElementById('register-form').classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

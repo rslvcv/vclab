@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCLab - Редактирование резюме</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .edit-header {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .edit-header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .edit-header p {
+            opacity: 0.9;
+        }
+        .form-container {
+            max-width: 900px;
+            margin: -50px auto 40px;
+            padding: 0 20px;
+        }
+        .edit-form {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .form-section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid #eaeaea;
+        }
+        .form-section h3 {
+            color: #2563eb;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+            font-weight: 500;
+        }
+        .required::after {
+            content: "*";
+            color: #dc2626;
+            margin-left: 4px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #eaeaea;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn-save {
+            flex: 1;
+            padding: 15px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37,99,235,0.3);
+        }
+        .btn-cancel {
+            flex: 1;
+            padding: 15px;
+            background: white;
+            color: #666;
+            border: 2px solid #eaeaea;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .btn-cancel:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+        .info-box {
+            background: #2563eb10;
+            border-left: 4px solid #2563eb;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .flash-messages {
+            max-width: 900px;
+            margin: 20px auto 0;
+            padding: 0 20px;
+        }
+        .flash-message {
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .flash-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .flash-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+       </style>
+</head>
+<body>
+    <!-- НАВИГАЦИЯ -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/" class="logo-text">VC<span class="logo-dot">•</span>Lab</a>
+            </div>
+            <div class="nav-links">
+                <a href="/">Главная</a>
+                <a href="/create">Создать резюме</a>
+                <a href="/pricing">Тарифы</a>
+                <a href="/dashboard" style="color: white; font-weight: 700;">Личный кабинет</a>
+                <a href="/logout" class="btn-primary">Выйти</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- FLASH СООБЩЕНИЯ -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- ЗАГОЛОВОК -->
+    <div class="edit-header">
+        <h1><i class="fas fa-edit"></i> Редактирование резюме</h1>
+        <p>Обновите информацию и получите новую версию на почту</p>
+    </div>
+
+    <!-- ФОРМА РЕДАКТИРОВАНИЯ -->
+    <div class="form-container">
+        <div class="edit-form">
+            <div class="info-box">
+                <i class="fas fa-info-circle" style="color: #2563eb;"></i>
+                После сохранения мы отправим обновленную версию на вашу почту
+            </div>
+
+            <form method="POST" action="/update-resume/{{ resume.id }}">
+                <!-- Личная информация -->
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> Личная информация</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="required">ФИО</label>
+                            <input type="text" name="fullname" value="{{ resume.fullname }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Желаемая должность</label>
+                            <input type="text" name="position" value="{{ resume.position }}" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="required">Email</label>
+                            <input type="email" name="email" value="{{ resume.email }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Телефон</label>
+                            <input type="tel" name="phone" value="{{ resume.phone }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Город</label>
+                            <input type="text" name="city" value="{{ resume.city }}">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- О себе -->
+                <div class="form-section">
+                    <h3><i class="fas fa-user-circle"></i> О себе</h3>
+                    <div class="form-group">
+                        <textarea name="about" rows="4">{{ resume.about }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Опыт работы -->
+                <div class="form-section">
+                    <h3><i class="fas fa-briefcase"></i> Опыт работы</h3>
+                    <div class="form-group">
+                        <label>Компания</label>
+                        <input type="text" name="company1" value="{{ resume.company1 }}">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Должность</label>
+                            <input type="text" name="position1" value="{{ resume.position1 }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Период работы</label>
+                            <input type="text" name="period1" value="{{ resume.period1 }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Обязанности</label>
+                        <textarea name="description1" rows="3">{{ resume.description1 }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Образование и навыки -->
+                <div class="form-section">
+                    <h3><i class="fas fa-graduation-cap"></i> Образование и навыки</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>ВУЗ</label>
+                            <input type="text" name="university" value="{{ resume.university }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Год окончания</label>
+                            <input type="text" name="graduation_year" value="{{ resume.graduation_year }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Специальность</label>
+                        <input type="text" name="specialty" value="{{ resume.specialty }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Навыки</label>
+                        <input type="text" name="skills" value="{{ resume.skills }}">
+                        <small style="color: #666; margin-top: 5px; display: block;">Введите навыки через запятую</small>
+                    </div>
+                </div>
+
+                <!-- Кнопки -->
+                <div class="button-group">
+                    <button type="submit" class="btn-save">
+                        <i class="fas fa-save"></i> Сохранить изменения
+                    </button>
+                    <a href="/dashboard" class="btn-cancel">
+                        <i class="fas fa-times"></i> Отмена
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ПОДВАЛ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>VCLab</h4>
+                <p>Создайте резюме, которое выделит вас среди других кандидатов.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-vk"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Сервис</h4>
+                <a href="/">Главная</a>
+
+                <a href="/create">Создать резюме</a>
+
+                <a href="/pricing">Тарифы</a>
+
+                <a href="/dashboard">Личный кабинет</a>
+            </div>
+            <div class="footer-section">
+                <h4>Поддержка</h4>
+                <p><i class="fas fa-envelope"></i> support@vclab.ru</p>
+                <p><i class="fas fa-phone"></i> +7 (999) 123-45-67</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 VCLab. Все права защищены.</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCLab - Тарифы</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .pricing-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 60px auto 40px;
+            padding: 0 20px;
+        }
+        .pricing-header h1 {
+            font-size: 48px;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+        .pricing-header h1 span {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .pricing-header p {
+            font-size: 18px;
+            color: #666;
+            line-height: 1.6;
+        }
+        .guarantee-badge {
+            background: linear-gradient(135deg, #2563eb10, #7c3aed10);
+            border: 1px solid #2563eb20;
+            border-radius: 50px;
+            padding: 15px 30px;
+            display: inline-block;
+            margin-top: 20px;
+            color: #2563eb;
+            font-weight: 500;
+            font-size: 16px;
+        }
+        .guarantee-badge i {
+            margin-right: 10px;
+            color: #10b981;
+        }
+        .pricing-cards {
+            max-width: 1200px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            position: relative;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+        }
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(37,99,235,0.15);
+        }
+        .pricing-card.popular {
+            border-color: #2563eb;
+            transform: scale(1.05);
+        }
+        .pricing-card.popular:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            padding: 8px 25px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .card-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .card-header h3 {
+            font-size: 28px;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+        .price {
+            font-size: 48px;
+            font-weight: 800;
+            color: #2563eb;
+            line-height: 1;
+        }
+        .price small {
+            font-size: 16px;
+            color: #666;
+            font-weight: 400;
+        }
+        .old-price {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 18px;
+            margin-top: 5px;
+        }
+        .features {
+            list-style: none;
+            margin: 30px 0;
+            flex-grow: 1;
+        }
+        .features li {
+            padding: 12px 0;
+            color: #4a5568;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .features li:last-child {
+            border-bottom: none;
+        }
+        .features i.fa-check {
+            color: #10b981;
+            width: 20px;
+        }
+        .features i.fa-star {
+            color: #fbbf24;
+            width: 20px;
+        }
+        .features i.fa-gem {
+            color: #2563eb;
+            width: 20px;
+        }
+        .features .highlight {
+            color: #2563eb;
+            font-weight: 600;
+            background: #2563eb10;
+            padding: 2px 8px;
+            border-radius: 50px;
+            margin-left: 5px;
+        }
+        .btn-pricing {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            margin-top: auto;
+        }
+        .btn-pricing:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37,99,235,0.3);
+        }
+        .btn-pricing.outline {
+            background: white;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+        }
+        .btn-pricing.outline:hover {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin: 40px 0 60px;
+        }
+        .trust-badge {
+            text-align: center;
+        }
+        .trust-badge i {
+            font-size: 32px;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+        .trust-badge span {
+            display: block;
+            color: #1a1a1a;
+            font-weight: 500;
+        }
+        .trust-badge small {
+            color: #666;
+        }
+        
+        max-width: 768px {
+            .pricing-card.popular {
+                transform: scale(1);
+            }
+            .pricing-card.popular:hover {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- НАВИГАЦИЯ -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/" class="logo-text">VC<span class="logo-dot">•</span>Lab</a>
+            </div>
+            <div class="nav-links">
+                <a href="/">Главная</a>
+                <a href="/create">Создать резюме</a>
+                <a href="/pricing" style="color: white; font-weight: 700;">Тарифы</a>
+                <a href="/dashboard">Личный кабинет</a>
+                <a href="/faq">FAQ</a>
+                {% if session.user_id %}
+                    <a href="/logout" class="btn-primary">Выйти</a>
+                {% else %}
+                    <a href="/login" class="btn-primary">Войти</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- ЗАГОЛОВОК С ГАРАНТИЕЙ -->
+    <div class="pricing-header">
+        <h1>Прозрачные <span>тарифы</span> без скрытых платежей</h1>
+        <p>Выбирайте тариф или добавляйте только нужные усиления. 
+           Каждое резюме проходит проверку и оптимизацию.</p>
+        <div class="guarantee-badge">
+            <i class="fas fa-shield-alt"></i> 
+            Гарантия: если за 14 дней не пригласят на собеседование - сделаем новое резюме бесплатно
+        </div>
+    </div>
+<!-- ТАРИФЫ (ОСНОВНЫЕ) -->
+    <div class="pricing-cards">
+        <!-- Базовый тариф -->
+        <div class="pricing-card">
+            <div class="card-header">
+                <h3>Базовый</h3>
+                <div class="price">99 ₽ <small>/ резюме</small></div>
+            </div>
+            <ul class="features">
+                <li><i class="fas fa-check"></i> <strong>1 резюме</strong></li>
+                <li><i class="fas fa-check"></i> PDF + Word форматы</li>
+                <li><i class="fas fa-check"></i> Современный дизайн</li>
+                <li><i class="fas fa-check"></i> Отправка на почту</li>
+                <li><i class="fas fa-check"></i> Хранение в личном кабинете</li>
+                <li><i class="fas fa-check"></i> Базовые шаблоны</li>
+                <li><i class="fas fa-check"></i> Поддержка 24/7</li>
+            </ul>
+            <a href="/create" class="btn-pricing outline">Выбрать тариф</a>
+        </div>
+
+        <!-- Уверенный тариф (Самый популярный) -->
+        <div class="pricing-card popular">
+            <div class="popular-badge">🔥 Самый популярный</div>
+            <div class="card-header">
+                <h3>Уверенный</h3>
+                <div class="price">299 ₽ <small>/ резюме</small></div>
+                <div class="old-price">599 ₽</div>
+            </div>
+            <ul class="features">
+                <li><i class="fas fa-star" style="color: #fbbf24;"></i> <strong>ВСЁ из Базового +</strong></li>
+                <li><i class="fas fa-check"></i> Премиум дизайн <span class="highlight">5 шаблонов</span></li>
+                <li><i class="fas fa-check"></i> <strong>ATS-оптимизация</strong> (роботы пропустят)</li>
+                <li><i class="fas fa-check"></i> Проверка текста редактором</li>
+                <li><i class="fas fa-check"></i> Сопроводительное письмо</li>
+                <li><i class="fas fa-check"></i> Анализ совместимости с вакансией</li>
+                <li><i class="fas fa-check"></i> Чек-лист подготовки к собеседованию</li>
+                <li><i class="fas fa-check"></i> <span class="highlight">Экономия 300 ₽</span></li>
+            </ul>
+            <a href="/create" class="btn-pricing">Выбрать тариф</a>
+        </div>
+
+        <!-- VIP тариф -->
+        <div class="pricing-card">
+            <div class="card-header">
+                <h3>VIP</h3>
+                <div class="price">999 ₽</div>
+                <small style="color: #666;">пакет</small>
+            </div>
+            <ul class="features">
+                <li><i class="fas fa-gem" style="color: #2563eb;"></i> <strong>ВСЁ из Уверенного +</strong></li>
+                <li><i class="fas fa-check"></i> <strong>5 резюме</strong> <span class="highlight">(экономия 1000 ₽)</span></li>
+                <li><i class="fas fa-check"></i> Эксклюзивные дизайны <span class="highlight">10 шт</span></li>
+                <li><i class="fas fa-check"></i> Бессрочное хранение</li>
+                <li><i class="fas fa-check"></i> Статистика просмотров</li>
+                <li><i class="fas fa-check"></i> Рекомендации по улучшению</li>
+                <li><i class="fas fa-check"></i> VIP поддержка 24/7</li>
+                <li><i class="fas fa-check"></i> Приоритетное выполнение (30 мин)</li>
+            </ul>
+            <a href="/create" class="btn-pricing outline">Выбрать тариф</a>
+        </div>
+    </div>
+
+    <!-- БЛОК ДОВЕРИЯ -->
+    <div class="trust-badges">
+        <div class="trust-badge">
+            <i class="fas fa-users"></i>
+            <span>1 500+</span>
+            <small>довольных клиентов</small>
+        </div>
+        <div class="trust-badge">
+            <i class="fas fa-file-pdf"></i>
+            <span>3 000+</span>
+            <small>созданных резюме</small>
+        </div>
+        <div class="trust-badge">
+            <i class="fas fa-star"></i>
+            <span>4.9 ★</span>
+            <small>средняя оценка</small>
+        </div>
+        <div class="trust-badge">
+            <i class="fas fa-clock"></i>
+            <span>5 мин</span>
+            <small>на создание</small>
+        </div>
+    </div>
+<!-- ОТДЕЛЬНЫЕ УСИЛЕНИЯ (ДОБАВКИ К ЛЮБОМУ ТАРИФУ) -->
+    <div style="max-width: 1200px; margin: 80px auto; padding: 0 20px;">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h2 style="font-size: 36px; color: #1a1a1a; margin-bottom: 15px;">✨ Усиления для любого тарифа</h2>
+            <p style="color: #666; font-size: 18px;">Добавьте к выбранному тарифу только то, что вам нужно</p>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px;">
+            
+            <!-- Фото в резюме -->
+            <div style="background: #f8fafc; border-radius: 15px; padding: 25px; text-align: center; border: 1px solid #eaeaea; transition: all 0.3s;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #2563eb15, #7c3aed15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <i class="fas fa-camera" style="font-size: 24px; background: linear-gradient(135deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                </div>
+                <h4 style="font-size: 18px; margin-bottom: 10px; color: #1a1a1a;">Фото в резюме</h4>
+                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Добавьте профессиональное фото. Доверие к кандидату выше на 40%</p>
+                <div style="font-size: 20px; font-weight: 700; color: #2563eb;">+99 ₽</div>
+                <div style="background: #2563eb10; border-radius: 50px; padding: 5px 15px; display: inline-block; margin-top: 10px; font-size: 13px; color: #2563eb;">доступно в любом тарифе</div>
+            </div>
+
+            <!-- ATS-оптимизация -->
+            <div style="background: #f8fafc; border-radius: 15px; padding: 25px; text-align: center; border: 1px solid #eaeaea;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #2563eb15, #7c3aed15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <i class="fas fa-robot" style="font-size: 24px; background: linear-gradient(135deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                </div>
+                <h4 style="font-size: 18px; margin-bottom: 10px; color: #1a1a1a;">ATS-оптимизация</h4>
+                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Роботы пропустят ваше резюме к живому рекрутеру. Ключевые слова под вашу сферу</p>
+                <div style="font-size: 20px; font-weight: 700; color: #2563eb;">+149 ₽</div>
+                <div style="background: #2563eb10; border-radius: 50px; padding: 5px 15px; display: inline-block; margin-top: 10px; font-size: 13px; color: #2563eb;">доступно в любом тарифе</div>
+            </div>
+
+            <!-- Сопроводительное письмо -->
+            <div style="background: #f8fafc; border-radius: 15px; padding: 25px; text-align: center; border: 1px solid #eaeaea;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #2563eb15, #7c3aed15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <i class="fas fa-pen-fancy" style="font-size: 24px; background: linear-gradient(135deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                </div>
+                <h4 style="font-size: 18px; margin-bottom: 10px; color: #1a1a1a;">Сопроводительное письмо</h4>
+                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Индивидуальное письмо под вакансию. Отдельным файлом в PDF</p>
+                <div style="font-size: 20px; font-weight: 700; color: #2563eb;">+149 ₽</div>
+                <div style="background: #2563eb10; border-radius: 50px; padding: 5px 15px; display: inline-block; margin-top: 10px; font-size: 13px; color: #2563eb;">доступно в любом тарифе</div></div>
+            <!-- Проверка орфографии -->
+            <div style="background: #f8fafc; border-radius: 15px; padding: 25px; text-align: center; border: 1px solid #eaeaea;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #2563eb15, #7c3aed15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <i class="fas fa-spell-check" style="font-size: 24px; background: linear-gradient(135deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                </div>
+                <h4 style="font-size: 18px; margin-bottom: 10px; color: #1a1a1a;">Проверка орфографии</h4>
+                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Ни одной ошибки. Автоматическое исправление опечаток</p>
+                <div style="font-size: 20px; font-weight: 700; color: #2563eb;">+99 ₽</div>
+                <div style="background: #2563eb10; border-radius: 50px; padding: 5px 15px; display: inline-block; margin-top: 10px; font-size: 13px; color: #2563eb;">доступно в любом тарифе</div>
+            </div>
+
+            <!-- Помощь в написании -->
+            <div style="background: #f8fafc; border-radius: 15px; padding: 25px; text-align: center; border: 1px solid #eaeaea;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #2563eb15, #7c3aed15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <i class="fas fa-lightbulb" style="font-size: 24px; background: linear-gradient(135deg, #2563eb, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
+                </div>
+                <h4 style="font-size: 18px; margin-bottom: 10px; color: #1a1a1a;">Помощь в написании</h4>
+                <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Готовые шаблоны под вашу профессию. Подсказки, что писать о себе</p>
+                <div style="font-size: 20px; font-weight: 700; color: #2563eb;">+199 ₽</div>
+                <div style="background: #2563eb10; border-radius: 50px; padding: 5px 15px; display: inline-block; margin-top: 10px; font-size: 13px; color: #2563eb;">доступно в любом тарифе</div>
+            </div>
+        </div>
+        
+        <p style="text-align: center; margin-top: 30px; color: #666;">
+            <i class="fas fa-info-circle"></i> Усиления можно комбинировать в любом сочетании. Итоговая цена = тариф + выбранные усиления.
+        </p>
+    </div>
+<!-- FAQ (Часто задаваемые вопросы) -->
+    <div style="max-width: 800px; margin: 80px auto; padding: 0 20px;">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h2 style="font-size: 32px; color: #1a1a1a;">❓ Часто задаваемые вопросы</h2>
+        </div>
+        
+        <div style="background: #f8fafc; border-radius: 10px; padding: 20px; margin-bottom: 15px; border: 1px solid #eaeaea;">
+            <h4 style="color: #1a1a1a; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-question-circle" style="color: #2563eb;"></i> Что входит в ATS-оптимизацию?
+            </h4>
+            <p style="color: #666;">Мы добавляем в резюме скрытые ключевые слова под вашу профессию, форматируем даты и названия так, чтобы программы-сканеры (ATS) гарантированно пропустили резюме к рекрутеру. Вы этого не увидите, но роботы найдут.</p>
+        </div>
+
+        <div style="background: #f8fafc; border-radius: 10px; padding: 20px; margin-bottom: 15px; border: 1px solid #eaeaea;">
+            <h4 style="color: #1a1a1a; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-question-circle" style="color: #2563eb;"></i> Как работает помощь в написании?
+            </h4>
+            <p style="color: #666;">Если вы не знаете, что писать о себе или в опыте работы - мы подставим готовые шаблоны под вашу профессию. Вы сможете их отредактировать или оставить как есть.</p>
+        </div>
+
+        <div style="background: #f8fafc; border-radius: 10px; padding: 20px; margin-bottom: 15px; border: 1px solid #eaeaea;">
+            <h4 style="color: #1a1a1a; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-question-circle" style="color: #2563eb;"></i> Можно добавить усилие к любому тарифу?
+            </h4>
+            <p style="color: #666;">Да! Вы можете выбрать любой тариф и добавить к нему любое количество усилений. Цена будет рассчитана автоматически при создании резюме.</p>
+        </div>
+
+        <div style="background: #f8fafc; border-radius: 10px; padding: 20px; margin-bottom: 15px; border: 1px solid #eaeaea;">
+            <h4 style="color: #1a1a1a; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-question-circle" style="color: #2563eb;"></i> Что значит гарантия 14 дней?
+            </h4>
+            <p style="color: #666;">Если после получения резюме вас не пригласили ни на одно собеседование в течение 14 дней - мы бесплатно сделаем новое резюме с другими настройками или вернем деньги.</p>
+        </div>
+    </div>
+
+    <!-- ПРИЗЫВ К ДЕЙСТВИЮ -->
+    <div style="text-align: center; margin: 60px auto; max-width: 600px; padding: 0 20px;">
+        <h2 style="font-size: 32px; color: #1a1a1a; margin-bottom: 20px;">Готовы выделиться?</h2>
+        <p style="color: #666; margin-bottom: 30px;">Создайте резюме, которое заметят. Выберите тариф и добавьте нужные усиления.</p>
+        <a href="/create" class="btn-pricing" style="display: inline-block; padding: 15px 50px; font-size: 18px; text-decoration: none; background: linear-gradient(135deg, #2563eb, #7c3aed); color: white; border-radius: 50px;">
+            <i class="fas fa-pen"></i> Создать резюме сейчас
+        </a>
+    </div>
+
+    <!-- ПОДВАЛ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>VCLab</h4>
+                <p>Создайте резюме, которое выделит вас среди других кандидатов.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-vk"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Сервис</h4>
+                <a href="/">Главная</a>
+
+                <a href="/create">Создать резюме</a>
+
+                <a href="/pricing">Тарифы</a><br>
+                <a href="/dashboard">Личный кабинет</a>
+
+                <a href="/faq">FAQ</a>
+            </div>
+            <div class="footer-section">
+                <h4>Поддержка</h4>
+                <p><i class="fas fa-envelope"></i> support@vclab.ru</p>
+                <p><i class="fas fa-phone"></i> +7 (999) 123-45-67</p>
+                <p><i class="fas fa-clock"></i> 24/7</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 VCLab. Все права защищены.</p>
+        </div>
+    </footer>
+</body>
+</html>

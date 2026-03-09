@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCLab - Просмотр резюме</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .view-header {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .view-header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .view-container {
+            max-width: 900px;
+            margin: -30px auto 40px;
+            padding: 0 20px;
+        }
+        .resume-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .resume-header {
+            background: linear-gradient(135deg, #2563eb10, #7c3aed10);
+            padding: 40px;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        .resume-header .name {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        .resume-header .position {
+            font-size: 20px;
+            color: #2563eb;
+            margin-bottom: 15px;
+        }
+        .contact-info {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            color: #666;
+        }
+        .contact-info i {
+            color: #2563eb;
+            margin-right: 5px;
+        }
+        .resume-body {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2563eb;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #2563eb20;
+            padding-bottom: 5px;
+        }
+        .section-title i {
+            margin-right: 10px;
+        }
+        .experience-item {
+            margin-bottom: 20px;
+        }
+        .company {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .period {
+            color: #2563eb;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        .description {
+            color: #666;
+            line-height: 1.6;
+        }
+        .skills-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .skill-tag {
+            background: #2563eb10;
+            color: #2563eb;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 14px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .btn-action {
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-pdf {
+            background: #dc2626;
+            color: white;
+        }
+        .btn-word {
+            background: #2563eb;
+            color: white;
+        }
+        .btn-back {
+            background: #f0f2f5;
+            color: #1a1a1a;
+        }
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .flash-messages {
+            max-width: 900px;
+            margin: 20px auto 0;
+            padding: 0 20px;
+        }
+        .flash-message {
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .flash-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+    </style>
+</head>
+<body>
+    <!--НАВИГАЦИЯ -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/" class="logo-text">VC<span class="logo-dot">•</span>Lab</a>
+            </div>
+            <div class="nav-links">
+                <a href="/">Главная</a>
+                <a href="/create">Создать резюме</a>
+                <a href="/pricing">Тарифы</a>
+                <a href="/dashboard" style="color: white; font-weight: 700;">Личный кабинет</a>
+                <a href="/logout" class="btn-primary">Выйти</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- FLASH СООБЩЕНИЯ -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- ЗАГОЛОВОК -->
+    <div class="view-header">
+        <h1><i class="fas fa-eye"></i> Просмотр резюме</h1>
+        <p>{{ resume.fullname }} - {{ resume.position }}</p>
+    </div>
+
+    <!-- ПРОСМОТР РЕЗЮМЕ -->
+    <div class="view-container">
+        <div class="resume-card">
+            <div class="resume-header">
+                <div>
+                    <div class="name">{{ resume.fullname }}</div>
+                    <div class="position">{{ resume.position }}</div>
+                    <div class="contact-info">
+                        <div><i class="fas fa-envelope"></i> {{ resume.email }}</div>
+                        {% if resume.phone %}
+                        <div><i class="fas fa-phone"></i> {{ resume.phone }}</div>
+                        {% endif %}
+                        {% if resume.city %}
+                        <div><i class="fas fa-city"></i> {{ resume.city }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="resume-body">
+                <!-- О себе -->
+                {% if resume.about %}
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-user-circle"></i> О себе
+                    </div>
+                    <p class="description">{{ resume.about }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Опыт работы -->
+                {% if resume.company1 %}
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-briefcase"></i> Опыт работы
+                    </div>
+                    <div class="experience-item">
+                        <div class="company">{{ resume.company1 }}</div>
+                        {% if resume.period1 %}
+                        <div class="period">{{ resume.period1 }}</div>
+                        {% endif %}
+                        {% if resume.description1 %}
+                        <p class="description">{{ resume.description1 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Образование -->
+                {% if resume.university %}
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-graduation-cap"></i> Образование
+                    </div>
+                    <div class="company">{{ resume.university }}</div>
+                    {% if resume.graduation_year %}
+                    <div class="period">{{ resume.graduation_year }}</div>
+                    {% endif %}
+                    {% if resume.specialty %}
+                    <p class="description">{{ resume.specialty }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+                        <!-- Навыки -->
+                {% if resume.skills %}
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-code"></i> Навыки
+                    </div>
+                    <div class="skills-tags">
+                        {% for skill in resume.skills.split(',') %}
+                        <span class="skill-tag">{{ skill.strip() }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Кнопки скачивания -->
+        <div class="action-buttons">
+            <a href="/download-resume/{{ resume.id }}/pdf" class="btn-action btn-pdf">
+                <i class="fas fa-file-pdf"></i> Скачать PDF
+            </a>
+            <a href="/download-resume/{{ resume.id }}/word" class="btn-action btn-word">
+                <i class="fas fa-file-word"></i> Скачать Word
+            </a>
+            <a href="/dashboard" class="btn-action btn-back">
+                <i class="fas fa-arrow-left"></i> Назад
+            </a>
+        </div>
+    </div>
+
+    <!-- ПОДВАЛ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>VCLab</h4>
+                <p>Создайте резюме, которое выделит вас среди других кандидатов.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-vk"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Сервис</h4>
+                <a href="/">Главная</a>
+
+                <a href="/create">Создать резюме</a>
+
+                <a href="/pricing">Тарифы</a>
+
+                <a href="/dashboard">Личный кабинет</a>
+            </div>
+            <div class="footer-section">
+                <h4>Поддержка</h4>
+                <p><i class="fas fa-envelope"></i> support@vclab.ru</p>
+                <p><i class="fas fa-phone"></i> +7 (999) 123-45-67</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 VCLab. Все права защищены.</p>
+        </div>
+    </footer>
+</body>
+</html>

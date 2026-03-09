@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCLab - Личный кабинет</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .flash-messages {
+            max-width: 1200px;
+            margin: 20px auto 0;
+            padding: 0 20px;
+        }
+        .flash-message {
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .flash-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .flash-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .empty-state i {
+            font-size: 80px;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+        }
+        .empty-state h3 {
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        .empty-state p {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+        .resume-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-action {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .btn-view {
+            background: #2563eb;
+            color: white;
+        }
+        .btn-download {
+            background: #10b981;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- НАВИГАЦИЯ -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <a href="/" class="logo-text">VC<span class="logo-dot">•</span>Lab</a>
+            </div>
+            <div class="nav-links">
+                <a href="/">Главная</a>
+                <a href="/create">Создать резюме</a>
+                <a href="/pricing">Тарифы</a>
+                <a href="/dashboard" style="color: white; font-weight: 700;">Личный кабинет</a>
+                {% if session.user_id %}
+                    <a href="/logout" class="btn-primary">Выйти</a>
+                {% else %}
+                    <a href="/login" class="btn-primary">Войти</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- FLASH СООБЩЕНИЯ -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- ШАПКА ЛИЧНОГО КАБИНЕТА -->
+    <div class="dashboard-header">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2>👋 Здравствуйте, {{ username }}!</h2>
+            <p>Здесь хранятся все ваши созданные резюме</p>
+            <div style="display: flex; gap: 20px; margin-top: 20px;">
+                <div style="background: rgba(255,255,255,0.2); padding: 15px 25px; border-radius: 10px;">
+                    <i class="fas fa-file-pdf"></i> Всего резюме: <strong>{{ resumes|length }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <div class="dashboard">
+        <!-- КНОПКА СОЗДАНИЯ -->
+        <div style="text-align: right; margin-bottom: 20px;">
+            <a href="/create" class="btn-pricing" style="display: inline-block; padding: 12px 30px;">
+                <i class="fas fa-plus"></i> Создать новое резюме
+            </a>
+        </div>
+
+        <!-- СПИСОК РЕЗЮМЕ -->
+        <div class="resumes-list">
+            <h3 style="margin-bottom: 20px; color: #2563eb;">📋 Ваши резюме</h3>
+            
+            {% if resumes %}
+                {% for resume in resumes %}
+                <div class="resume-item">
+                    <div class="resume-info">
+                        <h4>{{ resume[2] }}</h4>  <!-- fullname -->
+                        <p>
+                            <i class="fas fa-briefcase"></i> {{ resume[5] }} • 
+                            <i class="fas fa-calendar"></i> Создано: {{ resume[16][:10] }}
+                        </p>
+                        <p style="color: #666; font-size: 13px;">
+                            <i class="fas fa-envelope"></i> {{ resume[3] }}
+                            {% if resume[4] %}
+                                • <i class="fas fa-phone"></i> {{ resume[4] }}
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="resume-actions">
+    <!-- Кнопка редактирования -->
+    <a href="/edit-resume/{{ resume[0] }}" class="btn-action" style="background: #f59e0b; color: white;" title="Редактировать">
+        <i class="fas fa-edit"></i>
+    </a>
+    <!-- Кнопка просмотра -->
+    <a href="/view-resume/{{ resume[0] }}" class="btn-action btn-view" title="Просмотр">
+        <i class="fas fa-eye"></i>
+    </a>
+    <!-- Кнопка скачивания PDF -->
+    <a href="/download-resume/{{ resume[0] }}/pdf" class="btn-action btn-download" title="Скачать PDF">
+        <i class="fas fa-file-pdf"></i>
+    </a>
+    <!-- Кнопка удаления -->
+    <button onclick="confirmDelete({{ resume[0] }})" class="btn-action" style="background: #dc2626; color: white; border: none; cursor: pointer;" title="Удалить">
+        <i class="fas fa-trash"></i>
+    </button>
+</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Если нет резюме -->
+                <div class="empty-state">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>У вас пока нет резюме</h3>
+                    <p>Создайте первое резюме прямо сейчас и получите его на почту в PDF и Word!</p>
+                    <a href="/create" class="btn-pricing" style="display: inline-block; padding: 12px 30px;">
+                        <i class="fas fa-plus"></i> Создать резюме
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- JavaScript для удаления -->
+    <script>
+    function confirmDelete(resumeId) {
+        if (confirm('Вы уверены, что хотите удалить это резюме? Это действие нельзя отменить.')) {
+            // Создаем форму для отправки POST запроса
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/delete-resume/${resumeId}`;
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+    </script>
+
+    <!-- ПОДВАЛ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>VCLab</h4>
+                <p>Создайте резюме, которое выделит вас среди других кандидатов.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-vk"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h4>Сервис</h4>
+                <a href="/">Главная</a><br>
+                <a href="/create">Создать резюме</a>
+
+                <a href="/pricing">Тарифы</a>
+
+                <a href="/dashboard">Личный кабинет</a>
+            </div>
+            <div class="footer-section">
+                <h4>Поддержка</h4>
+                <p><i class="fas fa-envelope"></i> support@vclab.ru</p>
+                <p><i class="fas fa-phone"></i> +7 (999) 123-45-67</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 VCLab. Все права защищены.</p>
+        </div>
+    </footer>
+</body>
+</html> 
